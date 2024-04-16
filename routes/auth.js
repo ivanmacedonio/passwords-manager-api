@@ -34,12 +34,21 @@ router.post("/login", async(req,res) => {
         return res.status(401).json({"message": "Passwords doesnt match"})
     }
     req.session.authenticated = true;
-    res.send("Authentication Succesfully!").status(200)
+    res.status(200).json({message: "Authenticated!"})
 })
 
 router.post("/logout", (req,res) => {
     req.session.authenticated = false
     return res.send("Session ended!").status(200)
+})
+
+router.get('/status', (req,res) => {
+    const status = req.session.authenticated
+    if(status === true){
+        return res.status(200).json({"status": true})
+    } else {
+        return res.status(401).json({"status": false})
+    }
 })
 
 module.exports = router

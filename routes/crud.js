@@ -36,10 +36,12 @@ router.post("/passwords", requireAuth,  async(req,res) => {
         const contieneNumeros = /\d/.test(pass);
         if(noTieneEspacios === true && contieneMayusculas && contieneNumeros){
             const body = await sequelize.query(`INSERT INTO passwords (password) VALUES ("${pass}")`)
-            res.send("Password created!").status(201)
+            res.json({message: "Password created!"}).status(201)
             return
+        } else {
+            res.json({error: "the password must be contain uppercase, number and not white spaces"}).status(400)
         }
-        res.send("the password must be contain uppercase, number and not white spaces").status(400)
+        
     } catch (error){
         res.send("Internal Error").status(500)
     }
@@ -69,13 +71,13 @@ router.delete("/passwords/:id", requireAuth,  async(req,res) => {
     if(id){
         try{
             const password = sequelize.query(`DELETE FROM passwords WHERE id = ${id}`)
-            res.send("Password deleted!").status(200)
+            res.json({messsage: "Password Deleted"}).status(200)
             return
         } catch(error) {
-            res.send("Internal server error").status(500)
+            res.json({error: "Internal Server Error"}).status(500)
         }
     } else {
-        res.send("password not found").status(404)
+        res.json({error: "Password not Found!"}).status(404)
     }
 })
 
